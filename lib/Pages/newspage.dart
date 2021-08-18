@@ -16,53 +16,56 @@ class NewsPage extends StatefulWidget {
 }
 
 class _NewsPageState extends State<NewsPage> {
+  var darkThemeEnabled = false;
   @override
   Widget build(BuildContext context) {
     var w = MediaQuery.of(context).size.width;
-    return Scaffold(
-      backgroundColor: AppColors.black,
-      appBar: Appbar(),
-      drawer: DrawerWidget(),
-      body: Column(
-        children: [
-          SearchBar(),
-          Expanded(
-            child: Container(
-                width: w,
-                child: FutureBuilder<List>(
-                  future: fetchnews(),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      return ListView.builder(
-                          itemCount: snapshot.data.length,
-                          itemBuilder: (context, index) {
-                            return NewsBox(
-                              url: snapshot.data[index]['blogUrl'],
-                              imageurl:
-                              snapshot.data[index]['imgUrl'] != null
-                                  ? snapshot.data[index]['imgUrl']
-                                  : Constants.imageurl,
-                              title: snapshot.data[index]['title'],
-                              description: snapshot.data[index]
-                              ['shortDesc']
-                                  .toString(),
-                            );
-                          });
-                    } else if (snapshot.hasError) {
-                      return Text("${snapshot.error}");
-                    }
+      return SafeArea(
+        child: Scaffold(
+          backgroundColor: AppColors.black,
+          appBar: Appbar(),
+          drawer: DrawerWidget(),
+          body: Column(
+            children: [
+              //Search(),
+              Expanded(
+                child: Container(
+                  color: AppColors.black,
+                    width: w,
+                    child: FutureBuilder<List>(
+                      future: fetchnews(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          return ListView.builder(
+                              itemCount: snapshot.data.length,
+                              itemBuilder: (context, index) {
+                                return NewsBox(
+                                  url: snapshot.data[index]['blogUrl'],
+                                  imageurl:
+                                  snapshot.data[index]['imgUrl'] != null
+                                      ? snapshot.data[index]['imgUrl']
+                                      : Constants.imageurl,
+                                  title: snapshot.data[index]['title'],
+                                  description: snapshot.data[index]
+                                  ['shortDesc']
+                                      .toString(),
+                                );
+                              });
+                        } else if (snapshot.hasError) {
+                          return Text("${snapshot.error}");
+                        }
 
-                    // By default, show a loading spinner.
-                    return Center(
-                        child: CircularProgressIndicator(
-                          color: AppColors.primary,
-                        ));
-                  },
-                )),
+                        // By default, show a loading spinner.
+                        return Center(
+                            child: CircularProgressIndicator(
+                              color: AppColors.primary,
+                            ));
+                      },
+                    )),
+              ),
+            ],
           ),
-        ],
-      ),
-      //bottomNavigationBar: BottomNavigatiobarWidget(),
+        ),
     );
   }
 }

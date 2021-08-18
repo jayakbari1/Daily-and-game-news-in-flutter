@@ -1,7 +1,9 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:scadgame_news_app/utils/colors.dart';
 import 'package:scadgame_news_app/utils/text.dart';
+import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'components.dart';
@@ -56,20 +58,49 @@ class MyBottomSheetLayout extends StatelessWidget {
             padding: EdgeInsets.all(10),
             child: modifiedText(text: description,size: 16,color: Colors.white,),
           ),
-          Container(
-            padding: EdgeInsets.all(10),
-            child: RichText(
-              text: TextSpan(
-                  text: 'Read Full Article',
-                  recognizer: TapGestureRecognizer()
-                    ..onTap = (){
-                      _launchURL(url);
-                    },
-                  style: GoogleFonts.lato(
-                    color: Colors.blue.shade400,
-                  )
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              FlatButton(
+                color: Colors.yellowAccent,
+                child: Container(
+                  padding: EdgeInsets.all(10),
+                  child: RichText(
+                    text: TextSpan(
+                        text: 'Read Full Article',
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = (){
+                            _launchURL(url);
+                          },
+                        style: GoogleFonts.lato(
+                          color: Colors.blue.shade400,
+                        )
+                    ),
+                  ),
+                ),
+                onPressed: (){
+                  _launchURL(url);
+                },
               ),
-            ),
+              FlatButton(
+                color: AppColors.darkgrey,
+                onPressed: (){
+                  return showDialog(
+                    context: context,
+                    builder: (ctx) => AlertDialog(
+                      title: Text('DO you want to share this post?'),
+                      actions: [
+                        FlatButton(
+                          child: Text('Yes'),
+                          onPressed: () {
+                            Share.share(url);
+                          },
+                        ),
+                      ],
+                    ),
+                  );
+              }, child:Icon(Icons.share,color: AppColors.white,),),
+            ],
           ),
         ],
       ),
